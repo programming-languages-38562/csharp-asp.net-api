@@ -1,4 +1,4 @@
-namespace Models
+namespace StudentWebApi.Models
 {
     public class Student
     {

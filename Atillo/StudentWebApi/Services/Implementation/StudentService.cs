@@ -1,11 +1,11 @@
-using Models;
+using StudentWebApi.Models;
 using Services.Interfaces;
 
 namespace StudentWebApi.Services.Implementation
 {
     public class StudentService : IStudentService
     {
-        private readonly Dictionary<long, Student> _students = new Dictionary<long, Student>();
+        private Dictionary<long, Student> _students = new Dictionary<long, Student>();
         private long _idCounter = 1L;
         
         public Student AddStudent(Student student)
@@ -14,14 +14,13 @@ namespace StudentWebApi.Services.Implementation
             {
                 student.StudentId = _idCounter++;
             }
-
-            _students.Add(student.StudentId, student);
-            return student;
+            
+            return _students.TryAdd(student.StudentId, student) ? student : null;
         }
 
         public List<Student> GetAllStudents()
         {
-            return _students.Values.ToList();
+            return [.. _students.Values];
         }
         
         public Student? GetStudentById(long id)

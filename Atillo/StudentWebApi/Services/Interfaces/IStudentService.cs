@@ -1,4 +1,4 @@
-using Models;
+using StudentWebApi.Models;
 
 namespace Services.Interfaces
 {
