@@ -16,13 +16,12 @@ public class StudentController : ControllerBase
     [HttpPost]
     public IActionResult AddStudent([FromBody] Student student)
     {
-        Student? studentToAdd = _studentService.addStudent(student);
-
-        if (studentToAdd != null)
+        try
         {
-            return Ok(studentToAdd); // Return the result, not the input
+            Student studentToAdd = _studentService.addStudent(student);
+            return Ok(studentToAdd);
         }
-        else
+        catch (ArgumentException)
         {
             return BadRequest("ID is already taken!");
         }
@@ -50,16 +49,15 @@ public class StudentController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateStudent(long id, [FromBody] Student student)
     {
-        Student? studentToUpdate = _studentService.updateStudent(id, student);
+        student.PkStudentID = id;
+        var updatedStudent = _studentService.updateStudent(id, student);
 
-        if (studentToUpdate != null)
+        if (updatedStudent == null)
         {
-            return Ok(student);
+            return NotFound($"Student {id} not found");
         }
-        else
-        {
-            return NotFound($"Student not found");
-        }
+
+        return Ok(updatedStudent);
     }
     [HttpDelete("{id}")]
     public ActionResult<bool> DeleteStudent(long id)
