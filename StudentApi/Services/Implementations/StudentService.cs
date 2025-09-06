@@ -11,12 +11,14 @@ public class StudentService : IStudentService
 
     public Student AddStudent(Student student)
     {
+        
         if (student.StudentId == 0)
         {
             student.StudentId = studentCount++;
         }
 
-        studentsDB.Add(student.StudentId, student);
+        long studentId = student.StudentId;
+        studentsDB[studentId] = student;
 
         return student; 
     }
@@ -42,16 +44,18 @@ public class StudentService : IStudentService
     {
         long studentId = student.StudentId;
 
-
-        if (!studentsDB.ContainsKey(studentId)) 
-        { 
-            return null; 
+        if (!studentsDB.ContainsKey(studentId))
+        {
+            return null;
         }
 
-        studentsDB[studentId].Name = student.Name;
-        studentsDB[studentId].Course = student.Course;
+        if (string.IsNullOrWhiteSpace(student.Name) || string.IsNullOrWhiteSpace(student.Course))
+        {
+            return null;
+        }
 
-        return studentsDB[studentId];
+        studentsDB[studentId] = student;
+        return student;
     }
 
     public bool DeleteStudent(long id)

@@ -60,7 +60,11 @@ public class StudentController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateStudent(long id, [FromBody] Student student)
     {
+        if (string.IsNullOrEmpty(student.Name) || string.IsNullOrEmpty(student.Course))
+            return BadRequest("Incomplete Fields!");
+
         student.StudentId = id;
+        
 
         var updatedStudent = _studentService.UpdateStudent(student);
 
